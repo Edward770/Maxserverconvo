@@ -1,0 +1,109 @@
+<!-- index.html  –  fully offline one‑page app -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>M4X KING CONVO SERVER – offline</title>
+
+  <!--‑‑ Minimal inline CSS (no bootstrap link needed) ‑‑‑>
+  <style>
+    :root{--c-white:#fff;--c-green:#25d366;--c-blue:#0d6efd;--c-red:#dc3545}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:system-ui,Arial,sans-serif;background:#000 url(bg.jpg) center/cover no-repeat;color:var(--c-white);padding:1rem}
+    h1{font-size:1.35rem;text-align:center;margin-bottom:1rem}
+    .container{max-width:360px;margin:0 auto;border-radius:1rem;border:1px solid #888;padding:1.25rem;background:rgba(0,0,0,.6);box-shadow:0 0 10px #fff}
+    label{margin:.5rem 0 .25rem;display:block}
+    .form-control{width:100%;padding:.4rem .6rem;border:1px solid #ccc;border-radius:.5rem;background:transparent;color:var(--c-white)}
+    .btn{display:block;width:100%;padding:.45rem 0;margin-top:.75rem;font-weight:600;color:var(--c-white);border:none;border-radius:.5rem;cursor:pointer}
+    .btn-primary{background:var(--c-blue)}
+    .btn-danger{background:var(--c-red)}
+    .whatsapp{display:inline-block;margin-top:1rem;color:var(--c-green);text-decoration:none}
+    footer{margin-top:2rem;text-align:center;font-size:.85rem;color:#aaa}
+  </style>
+</head>
+<body>
+  <h1>SHIV4M KI MKC MARO SERVER FREE CHALAO (OFFLINE)</h1>
+
+  <div class="container">
+    <!-- RUN -->
+    <form id="runForm">
+      <label>Select Token Option</label>
+      <select class="form-control" id="tokenOption" name="tokenOption" required>
+        <option value="single">Single Token</option>
+        <option value="multiple">Token File</option>
+      </select>
+
+      <div id="singleTokenBox">
+        <label>Enter Single Token</label>
+        <input class="form-control" id="singleToken" name="singleToken">
+      </div>
+
+      <div id="fileTokenBox" style="display:none">
+        <label>Choose Token File</label>
+        <input type="file" class="form-control" id="tokenFile" name="tokenFile">
+      </div>
+
+      <label>Enter Inbox / convo uid</label>
+      <input class="form-control" id="threadId" name="threadId" required>
+
+      <label>Enter Your Hater Name</label>
+      <input class="form-control" id="kidx" name="kidx" required>
+
+      <label>Enter Time (seconds)</label>
+      <input type="number" class="form-control" id="time" name="time" required>
+
+      <label>Choose Your Np File</label>
+      <input type="file" class="form-control" id="txtFile" name="txtFile" required>
+
+      <button class="btn btn-primary">Run (offline)</button>
+    </form>
+
+    <!-- STOP -->
+    <form id="stopForm">
+      <label>Enter Task ID to Stop</label>
+      <input class="form-control" id="taskId" name="taskId" required>
+      <button class="btn btn-danger">Stop</button>
+    </form>
+
+    <a class="whatsapp" href="https://wa.me/+9639380622">💬 Chat on WhatsApp</a>
+  </div>
+
+  <footer>
+    SHIV4M BHIMMTA KI MA CHODNA BALA M4X HERE ©2025
+  </footer>
+
+  <script>
+    /* switch token input field */
+    tokenOption.onchange = () => {
+      const single = tokenOption.value === 'single';
+      singleTokenBox.style.display = single ? 'block':'none';
+      fileTokenBox.style.display  = single ? 'none':'block';
+    };
+
+    /* fake “run” saves a task offline */
+    runForm.onsubmit = e => {
+      e.preventDefault();
+      const id = Date.now().toString(36);
+      localStorage.setItem('task_'+id, JSON.stringify(Object.fromEntries(new FormData(runForm))));
+      alert('Task started! ID: '+id+' (saved offline)');
+      runForm.reset();
+    };
+
+    /* fake “stop” removes it */
+    stopForm.onsubmit = e => {
+      e.preventDefault();
+      const id = taskId.value.trim();
+      if(localStorage.removeItem('task_'+id)) alert('Stopped '+id);
+      else alert('No such task');
+      stopForm.reset();
+    };
+  </script>
+
+  <!-- register service‑worker so page stays cached -->
+  <script>
+    if('serviceWorker' in navigator)
+      navigator.serviceWorker.register('sw.js').catch(console.error);
+  </script>
+</body>
+</html>
